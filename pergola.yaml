@@ -1,0 +1,68 @@
+version: v1
+
+components:
+- name: broker
+  docker:
+    image: redis:6.0
+
+- name: db
+  docker:
+    image: postgres:13
+  env:
+  - name: POSTGRES_DB
+    value: paperless
+  - name: POSTGRES_USER
+    config-ref: PAPERLESS_DBUSER
+  - name: POSTGRES_PASSWORD
+    config-ref: PAPERLESS_DBPASS
+  storage:
+  - name: pgdata
+    path: /var/lib/postgresql/data
+    size: 2Gi
+
+- name: paperless-ng
+  docker:
+    file: Dockerfile
+  ports:
+  - 8000
+  storage:
+  - name: data
+    path: /usr/src/paperless/data
+    size: 1Gi
+  - name: media
+    path: /usr/src/paperless/media
+    size: 1Gi
+  - name: export
+    path: /usr/src/paperless/export
+    size: 1Gi
+  - name: consume
+    path: /usr/src/paperless/consume
+    size: 1Gi
+  env:
+  - name: PAPERLESS_SECRET_KEY
+    config-ref: PAPERLESS_SECRET_KEY
+  - name: PAPERLESS_REDIS
+    config-ref: PAPERLESS_REDIS_ENDPOINT
+  - name: PAPERLESS_DBHOST
+    component-ref: db
+  - name: PAPERLESS_DBUSER
+    config-ref: PAPERLESS_DBUSER
+  - name: PAPERLESS_DBPASS
+    config-ref: PAPERLESS_DBPASS
+  - name: PAPERLESS_TIKA_ENABLED
+    value: 1
+  - name: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
+    config-ref: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
+  - name: PAPERLESS_TIKA_ENDPOINT
+    config-ref: PAPERLESS_TIKA_ENDPOINT
+
+- name: gotenberg
+  docker:
+    image: thecodingmachine/gotenberg
+  env:
+  - name: DISABLE_GOOGLE_CHROME
+    value: 1
+
+- name: tika
+  docker:
+    image: apache/tika
