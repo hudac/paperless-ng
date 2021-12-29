@@ -4,6 +4,8 @@ components:
 - name: broker
   docker:
     image: redis:6.0
+  ports:
+  - 6379
 
 - name: db
   docker:
@@ -19,6 +21,8 @@ components:
   - name: pgdata
     path: /var/lib/postgresql/data
     size: 2Gi
+  ports:
+  - 5432
 
 - name: paperless-ng
   docker:
@@ -41,8 +45,10 @@ components:
   env:
   - name: PAPERLESS_SECRET_KEY
     config-ref: PAPERLESS_SECRET_KEY
+  - name: REDIS_HOST_REF
+    component-ref: broker
   - name: PAPERLESS_REDIS
-    config-ref: PAPERLESS_REDIS_ENDPOINT
+    value: "redis://$(REDIS_HOST_REF):6379"
   - name: PAPERLESS_DBHOST
     component-ref: db
   - name: PAPERLESS_DBUSER
@@ -51,10 +57,14 @@ components:
     config-ref: PAPERLESS_DBPASS
   - name: PAPERLESS_TIKA_ENABLED
     value: 1
+  - name: GOTENBERG_HOST_REF
+    component-ref: gotenberg
   - name: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
-    config-ref: PAPERLESS_TIKA_GOTENBERG_ENDPOINT
+    value: "http://$(GOTENBERG_HOST_REF):3000"
+  - name: TIKA_HOST_REF
+    component-ref: tika
   - name: PAPERLESS_TIKA_ENDPOINT
-    config-ref: PAPERLESS_TIKA_ENDPOINT
+    value: "http://$(TIKA_HOST_REF):9998"
 
 - name: gotenberg
   docker:
@@ -62,7 +72,11 @@ components:
   env:
   - name: DISABLE_GOOGLE_CHROME
     value: 1
+  ports:
+  - 3000
 
 - name: tika
   docker:
     image: apache/tika
+  ports:
+  - 9998
