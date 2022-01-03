@@ -74,7 +74,6 @@ COPY docker/ ./docker/
 
 RUN cd docker \
   && cp imagemagick-policy.xml /etc/ImageMagick-6/policy.xml \
-	&& mkdir /var/log/supervisord /var/run/supervisord \
 	&& cp supervisord.conf /etc/supervisord.conf \
 	&& cp docker-entrypoint.sh /sbin/docker-entrypoint.sh \
 	&& cp docker-prepare.sh /sbin/docker-prepare.sh \

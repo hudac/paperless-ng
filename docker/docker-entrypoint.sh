@@ -28,6 +28,9 @@ initialize() {
 	echo "Creating directory /tmp/paperless"
 	mkdir -p /tmp/paperless
 
+	echo "Creating directories /var/log/supervisord and /var/run/supervisord"
+	mkdir -p /var/log/supervisord /var/run/supervisord
+
 	set +e
 	echo "Adjusting permissions of paperless files. This may take a while."
 	chown -R paperless:paperless /tmp/paperless
