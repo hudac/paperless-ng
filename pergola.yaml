@@ -65,6 +65,10 @@ components:
     component-ref: tika
   - name: PAPERLESS_TIKA_ENDPOINT
     value: "http://$(TIKA_HOST_REF):9998"
+  - name: PAPERLESS_ADMIN_USER
+    config-ref: PAPERLESS_ADMIN_USER
+  - name: PAPERLESS_ADMIN_PASSWORD
+    config-ref: PAPERLESS_ADMIN_PASSWORD
 
 - name: gotenberg
   docker:
