@@ -8,6 +8,17 @@ RUN git clone https://github.com/agl/jbig2enc .
 RUN ./autogen.sh
 RUN ./configure && make
 
+
+FROM node:15.14 as build-fe
+
+COPY src-ui /paperless-ng/src-ui
+RUN mkdir -p /paperless-ng/src/documents/static/frontend
+
+WORKDIR /paperless-ng/src-ui
+RUN npm install
+RUN ./node_modules/.bin/ng build --prod
+
+
 FROM python:3.9-slim-bullseye
 
 # Binary dependencies
@@ -87,6 +98,7 @@ COPY gunicorn.conf.py ../
 
 # copy app
 COPY src/ ./
+COPY --from=build-fe /paperless-ng/src/documents/static/frontend/ ./documents/static/frontend/
 
 # add users, setup scripts
 RUN addgroup --gid 1000 paperless \
