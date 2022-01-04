@@ -72,7 +72,7 @@ components:
 
 - name: gotenberg
   docker:
-    image: thecodingmachine/gotenberg
+    image: thecodingmachine/gotenberg:6
   env:
   - name: DISABLE_GOOGLE_CHROME
     value: 1
@@ -81,6 +81,6 @@ components:
 
 - name: tika
   docker:
-    image: apache/tika
+    image: apache/tika:1.28
   ports:
   - 9998
