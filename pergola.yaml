@@ -29,8 +29,8 @@ components:
     file: Dockerfile
   ports:
   - 8000
-	ingress:
-	- host: dashboard
+  ingresses:
+  - host: dashboard
   storage:
   - name: data
     path: /usr/src/paperless/data
