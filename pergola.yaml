@@ -6,10 +6,15 @@ components:
     image: redis:6.0
   ports:
   - 6379
+  resources:
+    cpu: 10m
+    memory: 10Mi
 
 - name: db
   docker:
     image: postgres:13
+  resources:
+    memory: 200Mi
   env:
   - name: POSTGRES_DB
     value: paperless
@@ -31,6 +36,9 @@ components:
   - 8000
   ingresses:
   - host: dashboard
+  resources:
+    cpu: 100m
+    memory: 400Mi
   storage:
   - name: data
     path: /usr/src/paperless/data
@@ -80,9 +88,13 @@ components:
     value: 1
   ports:
   - 3000
+  resources:
+    memory: 50Mi
 
 - name: tika
   docker:
     image: apache/tika:1.28
   ports:
   - 9998
+  resources:
+    memory: 150Mi
